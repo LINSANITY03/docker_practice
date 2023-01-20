@@ -1,0 +1,28 @@
+version: '3'
+services:
+  postgres:
+    image: postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres1234
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - 80:80
+    environment:
+      - 'PGADMIN_DEFAULT_EMAIL=admin@gmail.com'
+      - 'PGADMIN_DEFAULT_PASSWORD=adminadmin'
+      - 'POSTGRES_DB=elasticsearch'
+  web:
+    image: django-app2
+    build: ./
+    ports:
+      - 8000:8000
+    environment:
+      DEBUG: 'true'  
+    command: python elastic_search/manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - postgres
+      
