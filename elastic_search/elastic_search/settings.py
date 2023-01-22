@@ -79,7 +79,7 @@ WSGI_APPLICATION = 'elastic_search.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'elasticsearch',
         'USER': 'postgres',
         'PASSWORD': 'postgres1234',
@@ -132,7 +132,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ELASTICSEARCH_DSL={
     'default': {
-        'hosts': 'localhost:9200',
+        'hosts': 'elastic_search:9200',
         'http_auth': ("elastic", 'Q+HUCUoq1LhHsLsXgt0a')
     },
 }

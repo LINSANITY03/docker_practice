@@ -2,24 +2,40 @@ version: '3'
 services:
   postgres:
     image: postgres
+    restart: always
     ports:
       - 5432:5432
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres1234
       - POSTGRES_DB=elasticsearch
-
+      - POSTGRES_HOST=postgres
     volumes:
-      - vidly:/var/lib/postgresql/data
+      - db-data:/var/lib/postgresql/data
   pgadmin:
     image: dpage/pgadmin4
+    restart: always
+    expose:
+      - "5050"
     ports:
-      - 80:80
+      - 5050:80
     environment:
       - 'PGADMIN_DEFAULT_EMAIL=admin@gmail.com'
       - 'PGADMIN_DEFAULT_PASSWORD=adminadmin'
-  web:
-    image: django-app2
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+  elastic_search:
+    image: elasticsearch:7.17.8
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    expose:
+      - "9200"
+    ports:
+      - 9200:9200
+    environment:
+      - discovery.type=single-node
+  django:
+    image: django-app
     build: ./
     ports:
       - 8000:8000
@@ -31,6 +47,12 @@ services:
              python elastic_search/manage.py runserver 0.0.0.0:8000"
     depends_on:
       - postgres
+      - elastic_search
 volumes:
-  vidly:
+  pgadmin-data:
+    driver: local
+  db-data:
+    driver: local
+  elasticsearch-data:
+    driver: local
       
